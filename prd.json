@@ -1,0 +1,16 @@
+[
+  {
+    "category": "ui",
+    "description": "Delete video shows confirmation dialog before deleting",
+    "steps": [
+      "Navigate to a video",
+      "Click delete button",
+      "Verify 'Are you sure?' confirmation dialog appears",
+      "Click cancel",
+      "Verify video is not deleted",
+      "Click delete again and confirm",
+      "Verify video is deleted"
+    ],
+    "passes": false
+  }
+]
