@@ -1,7 +1,8 @@
 [
   {
-    "category": "ui",
+    "category": "ui (Example)",
     "description": "Delete video shows confirmation dialog before deleting",
+    "scope": "Video list pages, video detail pages",
     "steps": [
       "Navigate to a video",
       "Click delete button",
