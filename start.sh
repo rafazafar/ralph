@@ -1,9 +1,7 @@
 set -e
 
-if [ -z "$1" ]; then
-    echo "Usage: ralph <iterations>"
-    exit 1
-fi
+# Default to 30 iterations if not specified
+ITERATIONS=${1:-30}
 
 AI_DIR=".ai"
 
@@ -22,7 +20,7 @@ if [ ! -f "$PRD_FILE" ]; then
     exit 1
 fi
 
-for ((i=1; i<=$1; i++)); do 
+for ((i=1; i<=$ITERATIONS; i++)); do 
     echo "Iteration $i" 
     echo "--------------------------------" 
     result=$(claude --dangerously-skip-permissions -p "@$PRD_FILE @$PROGRESS_FILE \

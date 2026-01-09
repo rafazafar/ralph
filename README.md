@@ -174,11 +174,16 @@ type nul > .ai/progress.txt
    chmod +x start.sh
    ```
 
-3. Run Ralph with the number of iterations:
+3. Run Ralph with the number of iterations (optional):
    ```bash
    ./start.sh 5
    ```
    This will run 5 iterations, working on one feature per iteration.
+   
+   **Note**: If no iteration count is specified, Ralph defaults to 30 iterations:
+   ```bash
+   ./start.sh
+   ```
 
 ### Windows
 
@@ -189,8 +194,11 @@ type nul > .ai/progress.txt
 
 2. Run the script using Git Bash or WSL:
    ```bash
-   # Using Git Bash
+   # Using Git Bash (with iteration count)
    bash start.sh 5
+   
+   # Or without iteration count (defaults to 30)
+   bash start.sh
 
    # Or using WSL (Windows Subsystem for Linux)
    wsl bash start.sh 5
@@ -233,8 +241,11 @@ start.bat 5
 ## Example Workflow
 
 ```bash
-# Start with 10 iterations
+# Start with 10 iterations (explicit)
 ./start.sh 10
+
+# Or use default (30 iterations)
+./start.sh
 
 # Ralph will:
 # - Iteration 1: Work on highest priority feature
