@@ -132,8 +132,9 @@ Create `.ai/prd.json` with your features:
 ```json
 [
   {
-    "category": "ui",
+    "category": "ui (Example)",
     "description": "Delete video shows confirmation dialog before deleting",
+    "scope": "Video list pages, video detail pages",
     "steps": [
       "Navigate to a video",
       "Click delete button",
@@ -147,6 +148,13 @@ Create `.ai/prd.json` with your features:
   }
 ]
 ```
+
+**Field Descriptions:**
+- `category`: The category or type of feature (e.g., "ui", "api", "backend")
+- `description`: A brief description of what the feature should do
+- `scope`: The areas or components of the application this feature affects
+- `steps`: An array of step-by-step instructions or acceptance criteria
+- `passes`: Boolean indicating whether the feature has been completed and verified
 
 ### Progress File
 

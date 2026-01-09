@@ -12,7 +12,7 @@ if [ ! -d "$AI_DIR" ]; then
 fi
 
 PRD_FILE="$AI_DIR/prd.json"
-PROGRESS_FILE="$AI_DIR/sprint-progress.txt"
+PROGRESS_FILE="$AI_DIR/progress.txt"
 
 # Check if required files exist
 if [ ! -f "$PRD_FILE" ]; then
@@ -28,7 +28,7 @@ for ((i=1; i<=$ITERATIONS; i++)); do
 This should be the one YOU decide has the highest priority - not necessarily the first. \
 2. Check that the types check via npx/npm/pnpm typecheck and that the tests pass via npx/npm/pnpm test. \
 3. Update the PRD with the work that was done. \
-4. Append your progress to the sprint-progress.txt file. \
+4. Append your progress to the progress.txt file. \
 Use this to leave a note for the next person working in the codebase. \
 5. Make a git commit of that feature. \
 ONLY WORK ON A SINGLE FEATURE. \
