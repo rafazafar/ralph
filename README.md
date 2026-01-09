@@ -2,6 +2,32 @@
 
 Ralph is an automated development assistant that uses Claude Code to iteratively work through features defined in a Product Requirements Document (PRD). It processes features one at a time, validates code quality, tracks progress, and commits work automatically.
 
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+  - [Node.js](#1-nodejs)
+  - [Claude Code](#2-claude-code)
+  - [GLM Coding Plan Setup](#3-glm-coding-plan-setup)
+- [Project Setup](#project-setup)
+  - [Required Directory Structure](#required-directory-structure)
+  - [Creating the `.ai` Directory](#creating-the-ai-directory)
+  - [PRD File Format](#prd-file-format)
+  - [Progress File](#progress-file)
+- [Usage](#usage)
+  - [Installing Ralph as a Global Command](#installing-ralph-as-a-global-command)
+  - [Using Ralph](#using-ralph)
+- [How It Works](#how-it-works)
+- [Example Workflow](#example-workflow)
+- [Troubleshooting](#troubleshooting)
+  - [Claude Code Not Found](#claude-code-not-found)
+  - [API Key Issues](#api-key-issues)
+  - [Network Errors](#network-errors)
+  - [Permission Denied (Mac/Linux)](#permission-denied-maclinux)
+  - [Missing .ai Directory](#missing-ai-directory)
+  - [Script Not Executable (Mac/Linux)](#script-not-executable-maclinux)
+- [Best Practices](#best-practices)
+- [Additional Resources](#additional-resources)
+
 ## Prerequisites
 
 Before using Ralph, you need to set up the following:
@@ -170,70 +196,114 @@ type nul > .ai/progress.txt
 
 ## Usage
 
-### Mac/Linux
+### Installing Ralph as a Global Command
 
-1. Navigate to your repository root:
-   ```bash
-   cd /path/to/your/repo
-   ```
+To use `ralph` from any repository, you need to add it to your shell configuration or PATH.
 
-2. Make the script executable (if not already):
-   ```bash
-   chmod +x start.sh
-   ```
+#### Mac/Linux
 
-3. Run Ralph with the number of iterations (optional):
-   ```bash
-   ./start.sh 5
-   ```
-   This will run 5 iterations, working on one feature per iteration.
-   
-   **Note**: If no iteration count is specified, Ralph defaults to 30 iterations:
-   ```bash
-   ./start.sh
-   ```
+**Option 1: Add to Shell Config (Recommended)**
 
-### Windows
+Add this function to your `~/.zshrc` or `~/.bash_profile`:
+```bash
+ralph() {
+    /path/to/ralph/start.sh "$@"
+}
+```
+Replace `/path/to/ralph` with the actual path to your ralph directory.
 
-1. Navigate to your repository root:
-   ```cmd
-   cd C:\path\to\your\repo
-   ```
-
-2. Run the script using Git Bash or WSL:
-   ```bash
-   # Using Git Bash (with iteration count)
-   bash start.sh 5
-   
-   # Or without iteration count (defaults to 30)
-   bash start.sh
-
-   # Or using WSL (Windows Subsystem for Linux)
-   wsl bash start.sh 5
-   ```
-
-   **Note**: Windows Command Prompt and PowerShell don't natively support bash scripts. You'll need:
-   - [Git Bash](https://git-scm.com/downloads) (recommended)
-   - [WSL](https://docs.microsoft.com/en-us/windows/wsl/install)
-   - Or use a cross-platform alternative (see below)
-
-### Alternative: Cross-Platform Script
-
-If you need Windows-native support, you can create a `start.bat` wrapper:
-
-```batch
-@echo off
-if "%1"=="" (
-    echo Usage: start.bat ^<iterations^>
-    exit /b 1
-)
-bash start.sh %1
+Then reload your shell:
+```bash
+source ~/.zshrc  # or source ~/.bash_profile
 ```
 
-Then run:
-```cmd
-start.bat 5
+**Option 2: Add Directory to PATH**
+
+1. Navigate to the ralph directory:
+   ```bash
+   cd /path/to/ralph
+   ```
+
+2. Rename `start.sh` to `ralph`:
+   ```bash
+   mv start.sh ralph
+   chmod +x ralph
+   ```
+
+3. Add the ralph directory to your PATH in `~/.zshrc` or `~/.bash_profile`:
+   ```bash
+   export PATH="/path/to/ralph:$PATH"
+   ```
+   Replace `/path/to/ralph` with the actual path.
+
+4. Reload your shell:
+   ```bash
+   source ~/.zshrc  # or source ~/.bash_profile
+   ```
+
+#### Windows
+
+**Option 1: Using Git Bash (Recommended)**
+
+1. Navigate to the ralph directory:
+   ```bash
+   cd /c/path/to/ralph
+   ```
+
+2. Rename `start.sh` to `ralph`:
+   ```bash
+   mv start.sh ralph
+   chmod +x ralph
+   ```
+
+3. Add the ralph directory to your PATH. Add this to your `~/.bashrc`:
+   ```bash
+   export PATH="/c/path/to/ralph:$PATH"
+   ```
+   Replace `/c/path/to/ralph` with the actual path to your ralph directory.
+
+4. Reload your shell:
+   ```bash
+   source ~/.bashrc
+   ```
+
+**Option 2: Using PowerShell/CMD**
+
+1. Create a batch file wrapper. Create `ralph.bat` in a directory in your PATH (e.g., `C:\Users\YourName\bin\`):
+   ```batch
+   @echo off
+   bash C:\path\to\ralph\start.sh %*
+   ```
+
+2. Add the directory to your Windows PATH:
+   - Open System Properties → Environment Variables
+   - Add `C:\Users\YourName\bin` (or your chosen directory) to PATH
+   - Restart your terminal
+
+**Option 3: Using WSL**
+
+Follow the Mac/Linux instructions above, but within your WSL environment.
+
+### Using Ralph
+
+Once installed, you can use `ralph` from any repository:
+
+```bash
+# Navigate to any repository
+cd /path/to/your/project
+
+# Run ralph with default 30 iterations
+ralph
+
+# Or specify a custom number of iterations
+ralph 10
 ```
+
+Ralph will automatically:
+- Look for `.ai/prd.json` in the current repository
+- Use `.ai/progress.txt` for tracking progress
+- Work through features one at a time
+- Exit early if the PRD is complete
 
 ## How It Works
 
@@ -249,11 +319,14 @@ start.bat 5
 ## Example Workflow
 
 ```bash
+# Navigate to your project repository
+cd ~/projects/my-app
+
 # Start with 10 iterations (explicit)
-./start.sh 10
+ralph 10
 
 # Or use default (30 iterations)
-./start.sh
+ralph
 
 # Ralph will:
 # - Iteration 1: Work on highest priority feature
