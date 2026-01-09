@@ -70,8 +70,8 @@ Ralph requires a GLM Coding Plan API key configured through the Coding Tool Help
 
 #### Get Your API Key
 
-1. Visit the [Z.AI Open Platform](https://platform.z.ai/) to retrieve your API Key
-2. Ensure your account has sufficient balance
+1. Visit the [Z.AI Open Platform API Keylist](https://z.ai/manage-apikey/apikey-list).
+2. Create a new API key for this.
 
 #### Install Coding Tool Helper
 
