@@ -1,68 +1,107 @@
-# Ralph - AI-Powered Development Assistant
+<div align="center">
 
-Ralph is an automated development assistant that uses Claude Code to iteratively work through features defined in a Product Requirements Document (PRD). It processes features one at a time, validates code quality, tracks progress, and commits work automatically.
+# 🤖 Ralph
 
-## Table of Contents
+### AI-Powered Development Assistant
 
-- [Prerequisites](#prerequisites)
-  - [Node.js](#1-nodejs)
-  - [Claude Code](#2-claude-code)
-  - [GLM Coding Plan Setup](#3-glm-coding-plan-setup)
-- [Project Setup](#project-setup)
-  - [Required Directory Structure](#required-directory-structure)
-  - [Creating the `.ai` Directory](#creating-the-ai-directory)
-  - [PRD File Format](#prd-file-format)
-  - [Progress File](#progress-file)
-- [Usage](#usage)
-  - [Installing Ralph as a Global Command](#installing-ralph-as-a-global-command)
-  - [Using Ralph](#using-ralph)
-- [How It Works](#how-it-works)
-- [Example Workflow](#example-workflow)
-- [Troubleshooting](#troubleshooting)
-  - [Claude Code Not Found](#claude-code-not-found)
-  - [API Key Issues](#api-key-issues)
-  - [Network Errors](#network-errors)
-  - [Permission Denied (Mac/Linux)](#permission-denied-maclinux)
-  - [Missing .ai Directory](#missing-ai-directory)
-  - [Script Not Executable (Mac/Linux)](#script-not-executable-maclinux)
-- [Best Practices](#best-practices)
-- [Additional Resources](#additional-resources)
+**Automated feature development with Claude Code**
 
-## Prerequisites
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org)
+
+*Ralph is an automated development assistant that uses Claude Code to iteratively work through features defined in a Product Requirements Document (PRD). It processes features one at a time, validates code quality, tracks progress, and commits work automatically.*
+
+</div>
+
+---
+
+## 📋 Table of Contents
+
+- [✨ Why Ralph?](#-why-ralph)
+- [🚀 Quick Start](#-quick-start)
+- [📦 Prerequisites](#-prerequisites)
+- [⚙️ Project Setup](#️-project-setup)
+- [💻 Usage](#-usage)
+- [🔍 How It Works](#-how-it-works)
+- [📚 Example Workflow](#-example-workflow)
+- [❓ Troubleshooting](#-troubleshooting)
+- [💡 Best Practices](#-best-practices)
+- [🔗 Additional Resources](#-additional-resources)
+
+---
+
+## ✨ Why Ralph?
+
+Ralph automates the tedious parts of development so you can focus on what matters:
+
+- 🔄 **Iterative Development** - Works through features systematically, one at a time
+- ✅ **Quality Assurance** - Runs type checking and tests automatically
+- 📊 **Progress Tracking** - Keeps detailed logs in `progress.txt`
+- 🎯 **Git Automation** - Commits each completed feature automatically
+- 🚀 **Time-Saving** - Stop manually managing the build-test-deploy cycle
+- 🎨 **PRD-Driven** - Your requirements document drives the entire process
+
+---
+
+## 🚀 Quick Start
+
+Get Ralph up and running in 5 minutes:
+
+```bash
+# 1. Install dependencies
+npm install -g @anthropic-ai/claude-code
+npm install -g @z_ai/coding-helper
+
+# 2. Configure your API key
+coding-helper auth glm_coding_plan_global <your-token>
+
+# 3. Set up your project
+mkdir -p .ai
+touch .ai/progress.txt
+# Create your prd.json (see below)
+
+# 4. Run Ralph!
+ralph
+```
+
+> **💡 Tip:** First time? Start with `ralph 1` to test a single iteration.
+
+---
+
+## 📦 Prerequisites
 
 Before using Ralph, you need to set up the following:
 
-### 1. Node.js
+### 1. Node.js ≥ v18.0.0
 
-- **Mac**: Install via [Homebrew](https://brew.sh/) or download from [nodejs.org](https://nodejs.org/)
-  ```bash
-  brew install node
-  ```
-- **Windows**: Download and install from [nodejs.org](https://nodejs.org/)
-  - Requires Node.js >= v18.0.0
+**Mac:**
+```bash
+brew install node
+```
+
+**Windows:**
+Download and install from [nodejs.org](https://nodejs.org/)
+
+---
 
 ### 2. Claude Code
 
 Claude Code is the CLI tool that Ralph uses to interact with Claude AI.
 
-#### Installation
-
-**Mac:**
+**Mac/Linux:**
 ```bash
-# Install Claude Code globally
 npm install -g @anthropic-ai/claude-code
 ```
 
-**Windows:**
+**Windows (PowerShell as Administrator):**
 ```powershell
-# Open PowerShell as Administrator, then:
 npm install -g @anthropic-ai/claude-code
 ```
 
-If you encounter permission errors:
-- **Mac/Linux**: Use `sudo npm install -g @anthropic-ai/claude-code`
-- **Windows**: Run PowerShell as Administrator
-- **Alternative**: Use `npx @anthropic-ai/claude-code` without global installation
+> **⚠️ Permission Issues?** Use `sudo npm install -g` (Mac/Linux) or `npx @anthropic-ai/claude-code` without global install.
+
+---
 
 ### 3. GLM Coding Plan Setup
 
@@ -70,51 +109,28 @@ Ralph requires a GLM Coding Plan API key configured through the Coding Tool Help
 
 #### Get Your API Key
 
-1. Visit the [Z.AI Open Platform API Keylist](https://z.ai/manage-apikey/apikey-list).
-2. Create a new API key for this.
+1. Visit the [Z.AI Open Platform API Keylist](https://z.ai/manage-apikey/apikey-list)
+2. Create a new API key for this project
 
-#### Install Coding Tool Helper
+#### Install & Configure
 
-**Mac:**
 ```bash
-# Option 1: Run directly (recommended for occasional use)
-npx @z_ai/coding-helper
-
-# Option 2: Install globally (for frequent use)
-npm install -g @z_ai/coding-helper
-coding-helper
-```
-
-**Windows:**
-```powershell
 # Option 1: Run directly
 npx @z_ai/coding-helper
 
-# Option 2: Install globally (run PowerShell as Administrator)
+# Option 2: Install globally
 npm install -g @z_ai/coding-helper
 coding-helper
 ```
 
-#### Configure Your Plan
-
-1. Run `npx @z_ai/coding-helper` or `coding-helper`
-2. Follow the interactive wizard:
-   - Select UI language
-   - Choose a coding plan (Global or other available plans)
-   - Enter your API key
-   - Select Claude Code to manage
-   - Auto-install tools if needed
-   - Load plan into Claude Code
-   - Complete setup
-
-#### Quick Configuration Commands
+**Quick Configuration Commands:**
 
 ```bash
 # Configure API key interactively
 coding-helper auth
 
-# Or set it directly (replace <token> with your actual API key)
-coding-helper auth glm_coding_plan_global <token>
+# Or set it directly
+coding-helper auth glm_coding_plan_global <your-token>
 
 # Reload plan into Claude Code
 coding-helper auth reload claude
@@ -125,7 +141,9 @@ coding-helper doctor
 
 For more details, see the [Coding Tool Helper Documentation](https://docs.z.ai/devpack/extension/coding-tool-helper).
 
-## Project Setup
+---
+
+## ⚙️ Project Setup
 
 ### Required Directory Structure
 
@@ -151,10 +169,13 @@ mkdir -p .ai
 mkdir .ai
 ```
 
+---
+
 ### PRD File Format
 
 Create `.ai/prd.json` with your features:
 
+**`.ai/prd.json`**
 ```json
 [
   {
@@ -176,113 +197,120 @@ Create `.ai/prd.json` with your features:
 ```
 
 **Field Descriptions:**
-- `category`: The category or type of feature (e.g., "ui", "api", "backend")
-- `description`: A brief description of what the feature should do
-- `scope`: The areas or components of the application this feature affects
-- `steps`: An array of step-by-step instructions or acceptance criteria
-- `passes`: Boolean indicating whether the feature has been completed and verified
+
+| Field | Description |
+|-------|-------------|
+| `category` | The category or type of feature (e.g., "ui", "api", "backend") |
+| `description` | A brief description of what the feature should do |
+| `scope` | The areas or components affected by this feature |
+| `steps` | Array of step-by-step instructions or acceptance criteria |
+| `passes` | Boolean indicating whether the feature is completed |
+
+---
 
 ### Progress File
 
 Create `.ai/progress.txt` (can be empty initially):
 
+**Mac/Linux:**
 ```bash
-# Mac/Linux
 touch .ai/progress.txt
+```
 
-# Windows
+**Windows:**
+```cmd
 type nul > .ai/progress.txt
 ```
 
-## Usage
+---
+
+## 💻 Usage
 
 ### Installing Ralph as a Global Command
 
 To use `ralph` from any repository, you need to add it to your shell configuration or PATH.
 
-#### Mac/Linux
+#### 🍎 Mac/Linux
 
 **Option 1: Add to Shell Config (Recommended)**
 
 Add this function to your `~/.zshrc` or `~/.bash_profile`:
+
+**`~/.zshrc`**
 ```bash
 ralph() {
     /path/to/ralph/start.sh "$@"
 }
 ```
-Replace `/path/to/ralph` with the actual path to your ralph directory.
 
-Then reload your shell:
+Replace `/path/to/ralph` with your actual path.
+
+Then reload:
 ```bash
-source ~/.zshrc  # or source ~/.bash_profile
+source ~/.zshrc
 ```
 
-**Option 2: Add Directory to PATH**
+---
 
-1. Navigate to the ralph directory:
-   ```bash
-   cd /path/to/ralph
-   ```
+**Option 2: Add to PATH**
 
-2. Rename `start.sh` to `ralph`:
-   ```bash
-   mv start.sh ralph
-   chmod +x ralph
-   ```
+```bash
+# Navigate to ralph directory
+cd /path/to/ralph
 
-3. Add the ralph directory to your PATH in `~/.zshrc` or `~/.bash_profile`:
-   ```bash
-   export PATH="/path/to/ralph:$PATH"
-   ```
-   Replace `/path/to/ralph` with the actual path.
+# Rename and make executable
+mv start.sh ralph
+chmod +x ralph
 
-4. Reload your shell:
-   ```bash
-   source ~/.zshrc  # or source ~/.bash_profile
-   ```
+# Add to PATH (in ~/.zshrc or ~/.bash_profile)
+export PATH="/path/to/ralph:$PATH"
 
-#### Windows
+# Reload shell
+source ~/.zshrc
+```
+
+---
+
+#### 🪟 Windows
 
 **Option 1: Using Git Bash (Recommended)**
 
-1. Navigate to the ralph directory:
-   ```bash
-   cd /c/path/to/ralph
-   ```
+```bash
+# Navigate to ralph directory
+cd /c/path/to/ralph
 
-2. Rename `start.sh` to `ralph`:
-   ```bash
-   mv start.sh ralph
-   chmod +x ralph
-   ```
+# Rename and make executable
+mv start.sh ralph
+chmod +x ralph
 
-3. Add the ralph directory to your PATH. Add this to your `~/.bashrc`:
-   ```bash
-   export PATH="/c/path/to/ralph:$PATH"
-   ```
-   Replace `/c/path/to/ralph` with the actual path to your ralph directory.
+# Add to PATH (in ~/.bashrc)
+export PATH="/c/path/to/ralph:$PATH"
 
-4. Reload your shell:
-   ```bash
-   source ~/.bashrc
-   ```
+# Reload shell
+source ~/.bashrc
+```
+
+---
 
 **Option 2: Using PowerShell/CMD**
 
-1. Create a batch file wrapper. Create `ralph.bat` in a directory in your PATH (e.g., `C:\Users\YourName\bin\`):
-   ```batch
-   @echo off
-   bash C:\path\to\ralph\start.sh %*
-   ```
+Create `ralph.bat` in a directory in your PATH:
 
-2. Add the directory to your Windows PATH:
-   - Open System Properties → Environment Variables
-   - Add `C:\Users\YourName\bin` (or your chosen directory) to PATH
-   - Restart your terminal
+**`ralph.bat`**
+```batch
+@echo off
+bash C:\path\to\ralph\start.sh %*
+```
+
+Then add the directory to your Windows PATH via System Properties → Environment Variables.
+
+---
 
 **Option 3: Using WSL**
 
-Follow the Mac/Linux instructions above, but within your WSL environment.
+Follow the Mac/Linux instructions above, within your WSL environment.
+
+---
 
 ### Using Ralph
 
@@ -299,24 +327,43 @@ ralph
 ralph 10
 ```
 
-Ralph will automatically:
-- Look for `.ai/prd.json` in the current repository
-- Use `.ai/progress.txt` for tracking progress
-- Work through features one at a time
-- Exit early if the PRD is complete
+**Ralph automatically:**
 
-## How It Works
+- ✅ Looks for `.ai/prd.json` in the current repository
+- ✅ Uses `.ai/progress.txt` for tracking progress
+- ✅ Works through features one at a time
+- ✅ Exits early if the PRD is complete
 
-1. **Feature Selection**: Ralph analyzes the PRD and selects the highest-priority feature to work on
-2. **Implementation**: Claude Code implements the feature
-3. **Validation**: 
+---
+
+## 🔍 How It Works
+
+```mermaid
+graph LR
+    A[Read PRD] --> B[Select Feature]
+    B --> C[Implement]
+    C --> D[Validate]
+    D --> E[Document]
+    E --> F[Commit]
+    F --> G{All Done?}
+    G -->|No| B
+    G -->|Yes| H[Complete]
+```
+
+**The Process:**
+
+1. **🎯 Feature Selection** - Analyzes the PRD and selects the highest-priority feature
+2. **💻 Implementation** - Claude Code implements the feature
+3. **✅ Validation**
    - Runs type checking (`npx/npm/pnpm typecheck`)
    - Runs tests (`npx/npm/pnpm test`)
-4. **Documentation**: Updates the PRD and appends progress to `progress.txt`
-5. **Commit**: Creates a git commit for the completed feature
-6. **Completion**: If all features are complete, Ralph exits with a completion message
+4. **📝 Documentation** - Updates the PRD and appends progress to `progress.txt`
+5. **📦 Commit** - Creates a git commit for the completed feature
+6. **🎉 Completion** - Exits with a completion message when all features are complete
 
-## Example Workflow
+---
+
+## 📚 Example Workflow
 
 ```bash
 # Navigate to your project repository
@@ -329,31 +376,43 @@ ralph 10
 ralph
 
 # Ralph will:
-# - Iteration 1: Work on highest priority feature
-# - Iteration 2: Work on next feature
-# - ... continues until PRD is complete or iterations run out
+# 🔄 Iteration 1: Work on highest priority feature
+# 🔄 Iteration 2: Work on next feature
+# 🔄 ... continues until PRD is complete or iterations run out
 ```
 
-## Troubleshooting
+---
 
-### Claude Code Not Found
+## ❓ Troubleshooting
 
-**Error**: `command not found: claude`
+<details>
+<summary><b>🔧 Claude Code Not Found</b></summary>
 
-**Solution**:
-- Verify Claude Code is installed: `npm list -g @anthropic-ai/claude-code`
-- Check your PATH includes npm global bin directory
-- **Mac**: Add to `~/.zshrc` or `~/.bash_profile`:
-  ```bash
-  export PATH="$PATH:$(npm config get prefix)/bin"
-  ```
-- **Windows**: Add npm global path to System Environment Variables
+**Error:** `command not found: claude`
 
-### API Key Issues
+**Solutions:**
 
-**Error**: API Key invalid or authentication failures
+```bash
+# Verify Claude Code is installed
+npm list -g @anthropic-ai/claude-code
 
-**Solution**:
+# Check your PATH includes npm global bin directory
+# Mac: Add to ~/.zshrc
+export PATH="$PATH:$(npm config get prefix)/bin"
+
+# Windows: Add npm global path to System Environment Variables
+```
+</details>
+
+---
+
+<details>
+<summary><b>🔑 API Key Issues</b></summary>
+
+**Error:** API Key invalid or authentication failures
+
+**Solutions:**
+
 ```bash
 # Reconfigure your API key
 coding-helper auth
@@ -367,61 +426,112 @@ coding-helper auth reload claude
 # Check configuration
 coding-helper doctor
 ```
+</details>
 
-### Network Errors
+---
 
-**Error**: Network timeout or connection errors
+<details>
+<summary><b>🌐 Network Errors</b></summary>
 
-**Solution**:
-- Check your internet connection
-- If using a proxy, configure Node.js proxy settings:
-  ```bash
-  # Mac/Linux
-  export HTTP_PROXY=http://your.proxy.server:port
-  export HTTPS_PROXY=http://your.proxy.server:port
-  
-  # Windows (PowerShell)
-  $env:HTTP_PROXY="http://your.proxy.server:port"
-  $env:HTTPS_PROXY="http://your.proxy.server:port"
-  ```
+**Error:** Network timeout or connection errors
 
-### Permission Denied (Mac/Linux)
+**Solutions:**
 
-**Error**: `EACCES: permission denied`
-
-**Solution**:
-- Use `sudo` for global npm installs: `sudo npm install -g ...`
-- Or use `npx` to avoid global installs
-- Consider using [nvm](https://github.com/nvm-sh/nvm) to manage Node.js versions
-
-### Missing .ai Directory
-
-**Error**: `'.ai' directory not found`
-
-**Solution**:
-- Ensure you're in the repository root
-- Create the directory: `mkdir -p .ai`
-- Create required files: `prd.json` and `progress.txt`
-
-### Script Not Executable (Mac/Linux)
-
-**Error**: `Permission denied`
-
-**Solution**:
 ```bash
+# Check your internet connection
+
+# If using a proxy, configure Node.js proxy settings
+# Mac/Linux
+export HTTP_PROXY=http://your.proxy.server:port
+export HTTPS_PROXY=http://your.proxy.server:port
+
+# Windows (PowerShell)
+$env:HTTP_PROXY="http://your.proxy.server:port"
+$env:HTTPS_PROXY="http://your.proxy.server:port"
+```
+</details>
+
+---
+
+<details>
+<summary><b>🔒 Permission Denied (Mac/Linux)</b></summary>
+
+**Error:** `EACCES: permission denied`
+
+**Solutions:**
+
+```bash
+# Use sudo for global npm installs
+sudo npm install -g ...
+
+# Or use npx to avoid global installs
+npx @anthropic-ai/claude-code
+
+# Consider using nvm to manage Node.js versions
+# https://github.com/nvm-sh/nvm
+```
+</details>
+
+---
+
+<details>
+<summary><b>📁 Missing .ai Directory</b></summary>
+
+**Error:** `'.ai' directory not found`
+
+**Solutions:**
+
+```bash
+# Ensure you're in the repository root
+cd /path/to/your/repository
+
+# Create the directory
+mkdir -p .ai
+
+# Create required files
+touch .ai/prd.json .ai/progress.txt
+```
+</details>
+
+---
+
+<details>
+<summary><b>⚡ Script Not Executable (Mac/Linux)</b></summary>
+
+**Error:** `Permission denied`
+
+**Solutions:**
+
+```bash
+# Make the script executable
 chmod +x start.sh
 ```
+</details>
 
-## Best Practices
+---
 
-1. **Start Small**: Begin with 1-2 iterations to test your setup
-2. **Review Commits**: Check git commits after each iteration
-3. **Monitor Progress**: Review `progress.txt` to understand what Ralph is working on
-4. **Update PRD**: Keep your PRD file updated with accurate feature descriptions
-5. **Version Control**: Commit your PRD and progress files to track changes
+## 💡 Best Practices
 
-## Additional Resources
+1. **🎯 Start Small** - Begin with 1-2 iterations to test your setup
+2. **👀 Review Commits** - Check git commits after each iteration
+3. **📊 Monitor Progress** - Review `progress.txt` to understand what Ralph is working on
+4. **📝 Update PRD** - Keep your PRD file updated with accurate feature descriptions
+5. **🔄 Version Control** - Commit your PRD and progress files to track changes
 
-- [Claude Code Documentation](https://docs.anthropic.com/claude/docs/claude-code)
-- [Coding Tool Helper Documentation](https://docs.z.ai/devpack/extension/coding-tool-helper)
-- [Z.AI Open Platform](https://platform.z.ai/)
+---
+
+## 🔗 Additional Resources
+
+- [📖 Claude Code Documentation](https://docs.anthropic.com/claude/docs/claude-code)
+- [🛠️ Coding Tool Helper Documentation](https://docs.z.ai/devpack/extension/coding-tool-helper)
+- [🌐 Z.AI Open Platform](https://platform.z.ai/)
+
+---
+
+<div align="center">
+
+**Made with ❤️ for developers**
+
+[⬆ Back to Top](#-ralph)
+
+</div>
